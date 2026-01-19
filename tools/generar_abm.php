@@ -645,6 +645,9 @@ FuncionesPHPLocal::CargarConstantes(\$conexion,array("roles"=>"si","sistema"=>SI
     <div id="pager2"></div>
 </div>
 </div>
+<?php
+\$oEncabezados->PieMenuEmergente();
+?>
 PHP;
 
 $formInputs = '';
@@ -766,6 +769,9 @@ $amPage .= <<<PHP
     </div>
 </div>
 </div>
+<?php
+\$oEncabezados->PieMenuEmergente();
+?>
 PHP;
 
 $listColumns = [];
