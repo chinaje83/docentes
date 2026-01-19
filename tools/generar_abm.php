@@ -793,6 +793,8 @@ if ($hasEstado) {
 }
 $colNames[] = "'Editar'";
 $colModels[] = "{name:'edit',index:'edit', width:35, align:'center', sortable:false}";
+$colNamesBlock = implode(",\n            ", $colNames);
+$colModelsBlock = implode(",\n            ", $colModels);
 
 $jsList = <<<JS
 jQuery(function($){
@@ -849,10 +851,10 @@ function listar(){
         postData: datos,
         datatype: "json",
         colNames:[
-            {$colNames}
+            {$colNamesBlock}
         ],
         colModel:[
-            {$colModels}
+            {$colModelsBlock}
         ],
         rowNum:20,
         ajaxGridOptions: {cache: false},
