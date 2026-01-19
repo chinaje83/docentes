@@ -614,7 +614,7 @@ FuncionesPHPLocal::CargarConstantes(\$conexion,array("roles"=>"si","sistema"=>SI
 \$oEncabezados = new cEncabezados(\$conexion);
 \$oEncabezados->CargarPreload();
 \$oEncabezados->setTitle("{$clase}");
-\$oEncabezados->addScript("/modulos/{$modulo}/js/{$modulo}.js?v=1.0");
+\$oEncabezados->addScript("modulos/{$modulo}/js/{$modulo}.js?v=1.0");
 \$oEncabezados->EncabezadoMenuEmergente(\$_SESSION['rolcod'],\$_SESSION['usuariocod']);
 
 ?>
@@ -698,7 +698,7 @@ FuncionesPHPLocal::CargarConstantes(\$conexion,array("roles"=>"si","sistema"=>SI
 \$oEncabezados = new cEncabezados(\$conexion);
 \$oEncabezados->CargarPreload();
 \$oEncabezados->setTitle("{$clase}");
-\$oEncabezados->addScript("/modulos/{$modulo}/js/{$modulo}_am.js?v=1.0");
+\$oEncabezados->addScript("modulos/{$modulo}/js/{$modulo}_am.js?v=1.0");
 \$oEncabezados->EncabezadoMenuEmergente(\$_SESSION['rolcod'],\$_SESSION['usuariocod']);
 
 \$oObjeto = new c{$clase}(\$conexion);
