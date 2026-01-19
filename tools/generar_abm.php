@@ -386,12 +386,14 @@ foreach ($requiredFields as $fieldName) {
 if (count($validations) === 0) {
     $validations[] = "        return true;";
 }
+$validationsBlock = implode("\n", $validations);
 
 $setNullLines = [];
 foreach ($fields as $field) {
     $name = $field['nombre'];
     $setNullLines[] = "        if (array_key_exists('{$name}', \$datos) && \$datos['{$name}'] === '') {\n            \$datos['{$name}'] = null;\n        }";
 }
+$setNullBlock = implode("\n", $setNullLines);
 
 $auditAssignments = [];
 if (fieldExists($fields, 'AltaFecha')) {
@@ -540,7 +542,7 @@ PHP;
 $logicClass .= <<<PHP
 
     private function _ValidarInsertar(\$datos): bool {
-{$validations}
+{$validationsBlock}
     }
 
     private function _ValidarModificar(\$datos): bool {
@@ -548,11 +550,11 @@ $logicClass .= <<<PHP
             \$this->setError('{$pk}', 'El codigo es obligatorio.');
             return false;
         }
-{$validations}
+{$validationsBlock}
     }
 
     private function _SetearNull(&\$datos): void {
-{$setNullLines}
+{$setNullBlock}
     }
 }
 PHP;
