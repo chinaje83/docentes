@@ -795,6 +795,25 @@ $colNames[] = "'Editar'";
 $colModels[] = "{name:'edit',index:'edit', width:35, align:'center', sortable:false}";
 
 $jsList = <<<JS
+jQuery(function($){
+    if (typeof $.fn.serializeObject !== "function") {
+        $.fn.serializeObject = function() {
+            var obj = {};
+            $.each(this.serializeArray(), function() {
+                if (obj[this.name] !== undefined) {
+                    if (!Array.isArray(obj[this.name])) {
+                        obj[this.name] = [obj[this.name]];
+                    }
+                    obj[this.name].push(this.value || "");
+                } else {
+                    obj[this.name] = this.value || "";
+                }
+            });
+            return obj;
+        };
+    }
+});
+
 jQuery(document).ready(function(){
     listar();
     $(document).on('click', '#btnBuscar', function () {
