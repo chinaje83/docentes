@@ -1,0 +1,12 @@
+{
+  "tabla": "Cargos",
+  "modulo": "car_cargos",
+  "clase": "Cargos",
+  "pk": "IdCargo",
+  "campos": [
+    {"nombre": "IdCargo", "tipo": "int", "label": "Id", "auto": true, "listado": true},
+    {"nombre": "Codigo", "tipo": "string", "label": "Codigo", "requerido": true, "busqueda": true, "listado": true},
+    {"nombre": "Descripcion", "tipo": "string", "label": "Descripcion", "requerido": true, "busqueda": true, "listado": true},
+    {"nombre": "Estado", "tipo": "int", "label": "Estado", "listado": false}
+  ]
+}
