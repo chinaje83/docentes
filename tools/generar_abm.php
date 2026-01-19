@@ -120,7 +120,7 @@ function parseCreateTable(string $sql): array {
         $required = str_contains($rest, 'not null') && !str_contains($rest, 'default') && !$auto;
 
         $label = $name;
-        if (preg_match(\"/comment\\s+'([^']+)'/i\", $colMatch[3] ?? '', $commentMatch)) {
+        if (preg_match("/comment\\s+'([^']+)'/i", $colMatch[3] ?? '', $commentMatch)) {
             $label = $commentMatch[1];
         }
 
