@@ -567,16 +567,26 @@ foreach ($fields as $field) {
     }
     $label = fieldLabel($field);
     $inputType = fieldInputType($field);
-    $searchInputs .= <<<HTML
+    $fieldName = $field['nombre'];
+    $searchInputs .= sprintf(<<<HTML
                 <div class="col-md-3">
                     <div class="form-group clearfix">
-                        <input name="{$field['nombre']}" placeholder="{$label}" id="{$field['nombre']}" class="form-control input-md" type="{$inputType}" maxlength="255" value="<?php echo (isset(\$_SESSION[\"BusquedaAvanzada\"][\"{$field['nombre']}\"])) ? FuncionesPHPLocal::HtmlspecialcharsSistema(\$_SESSION[\"BusquedaAvanzada\"][\"{$field['nombre']}\"],ENT_QUOTES) : \"\"; ?>" />
+                        <input name="%s" placeholder="%s" id="%s" class="form-control input-md" type="%s" maxlength="255" value="<?php echo (isset(\$_SESSION['BusquedaAvanzada']['%s'])) ? FuncionesPHPLocal::HtmlspecialcharsSistema(\$_SESSION['BusquedaAvanzada']['%s'],ENT_QUOTES) : ''; ?>" />
                         <span class="bar"></span>
-                        <label for='{$field['nombre']}'>{$label}:</label>
+                        <label for="%s">%s:</label>
                     </div>
                 </div>
 
-HTML;
+HTML,
+        $fieldName,
+        $label,
+        $fieldName,
+        $inputType,
+        $fieldName,
+        $fieldName,
+        $fieldName,
+        $label
+    );
 }
 
 $listPage = <<<PHP
@@ -644,15 +654,23 @@ foreach ($fields as $field) {
     $label = fieldLabel($field);
     $inputType = fieldInputType($field);
     $required = isRequired($field) ? 'required' : '';
-    $formInputs .= <<<HTML
+    $formInputs .= sprintf(<<<HTML
                     <div class="col-md-4">
                         <div class="form-group clearfix">
-                            <label for="{$name}">{$label}</label>
-                            <input type="{$inputType}" class="form-control input-md" name="{$name}" id="{$name}" value="<?php echo FuncionesPHPLocal::HtmlspecialcharsSistema(\${$name} ?? '',ENT_QUOTES) ?>" {$required} />
+                            <label for="%s">%s</label>
+                            <input type="%s" class="form-control input-md" name="%s" id="%s" value="<?php echo FuncionesPHPLocal::HtmlspecialcharsSistema($%s ?? '',ENT_QUOTES) ?>" %s />
                         </div>
                     </div>
 
-HTML;
+HTML,
+        $name,
+        $label,
+        $inputType,
+        $name,
+        $name,
+        $name,
+        $required
+    );
 }
 
 $amPage = <<<PHP
