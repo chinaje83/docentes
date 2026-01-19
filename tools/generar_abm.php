@@ -606,7 +606,7 @@ FuncionesPHPLocal::CargarConstantes(\$conexion,array("roles"=>"si","sistema"=>SI
 \$conexion->SetearAdmiGeneral(ADMISITE);
 
 \$sesion = new Sesion(\$conexion,false);
-\$sesion->TienePermisos(\$conexion,\$_SESSION['usuariocod'],\$_SESSION['rolcod'],\$_SERVER['PHP_SELF']);
+// \$sesion->TienePermisos(\$conexion,\$_SESSION['usuariocod'],\$_SESSION['rolcod'],\$_SERVER['PHP_SELF']);
 
 \$oSistemaBloqueo = new SistemaBloqueo();
 \$oSistemaBloqueo->VerificarBloqueo(\$conexion);
@@ -690,7 +690,7 @@ FuncionesPHPLocal::CargarConstantes(\$conexion,array("roles"=>"si","sistema"=>SI
 \$conexion->SetearAdmiGeneral(ADMISITE);
 
 \$sesion = new Sesion(\$conexion,false);
-\$sesion->TienePermisos(\$conexion,\$_SESSION['usuariocod'],\$_SESSION['rolcod'],\$_SERVER['PHP_SELF']);
+// \$sesion->TienePermisos(\$conexion,\$_SESSION['usuariocod'],\$_SESSION['rolcod'],\$_SERVER['PHP_SELF']);
 
 \$oSistemaBloqueo = new SistemaBloqueo();
 \$oSistemaBloqueo->VerificarBloqueo(\$conexion);
@@ -1050,7 +1050,7 @@ require_once(DIR_CLASES_LOGICA.'c{$clase}.class.php');
 
 FuncionesPHPLocal::CargarConstantes(\$conexion,array("roles"=>"si","sistema"=>SISTEMA));
 \$sesion = new Sesion(\$conexion,false);
-\$sesion->TienePermisos(\$conexion,\$_SESSION['usuariocod'],\$_SESSION['rolcod'],\$_SERVER['PHP_SELF']);
+// \$sesion->TienePermisos(\$conexion,\$_SESSION['usuariocod'],\$_SESSION['rolcod'],\$_SERVER['PHP_SELF']);
 
 \$oSistemaBloqueo = new SistemaBloqueo();
 \$oSistemaBloqueo->VerificarBloqueo(\$conexion);
@@ -1165,7 +1165,7 @@ FuncionesPHPLocal::CargarConstantes(\$conexion,array("roles"=>"si","sistema"=>SI
 \$conexion->SetearAdmiGeneral(ADMISITE);
 
 \$sesion = new Sesion(\$conexion,false);
-\$sesion->TienePermisos(\$conexion,\$_SESSION['usuariocod'],\$_SESSION['rolcod'],\$_SERVER['PHP_SELF']);
+// \$sesion->TienePermisos(\$conexion,\$_SESSION['usuariocod'],\$_SESSION['rolcod'],\$_SERVER['PHP_SELF']);
 
 \$oSistemaBloqueo = new SistemaBloqueo();
 \$oSistemaBloqueo->VerificarBloqueo(\$conexion);
