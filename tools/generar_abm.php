@@ -243,6 +243,7 @@ foreach ($fields as $field) {
     }
     $insertParams[] = "            'p{$name}' => \$datos['{$name}'],";
 }
+$insertParamsBlock = implode("\n", $insertParams);
 
 $updateParams = [];
 foreach ($fields as $field) {
@@ -253,6 +254,7 @@ foreach ($fields as $field) {
     $updateParams[] = "            'p{$name}' => \$datos['{$name}'],";
 }
 $updateParams[] = "            'p{$pk}' => \$datos['{$pk}'],";
+$updateParamsBlock = implode("\n", $updateParams);
 
 $searchParams = [];
 foreach ($fields as $field) {
@@ -262,6 +264,7 @@ foreach ($fields as $field) {
 }
 $searchParams[] = "            'plimit' => \$datos['limit'],";
 $searchParams[] = "            'porderby' => \$datos['orderby'],";
+$searchParamsBlock = implode("\n", $searchParams);
 
 $dbClass = <<<PHP
 <?php
@@ -304,7 +307,7 @@ abstract class c{$clase}DB {
     protected function BusquedaAvanzada(array \$datos, &\$resultado, ?int &\$numfilas): bool {
         \$spnombre = "sel_{$tabla}_busqueda_avanzada";
         \$sparam = [
-{$searchParams}
+{$searchParamsBlock}
         ];
         if (!\$this->conexion->ejecutarStoredProcedure(\$spnombre, \$sparam, \$resultado, \$numfilas, \$errno)) {
             FuncionesPHPLocal::MostrarMensaje(\$this->conexion, MSG_ERRGRAVE, "Error al realizar la busqueda avanzada.", ["archivo" => __FILE__, "funcion" => __FUNCTION__, "linea" => __LINE__], ["formato" => \$this->formato]);
@@ -316,7 +319,7 @@ abstract class c{$clase}DB {
     protected function Insertar(array \$datos, ?int &\$codigoInsertado): bool {
         \$spnombre = "ins_{$tabla}";
         \$sparam = [
-{$insertParams}
+{$insertParamsBlock}
         ];
         if (!\$this->conexion->ejecutarStoredProcedure(\$spnombre, \$sparam, \$resultado, \$numfilas, \$errno)) {
             FuncionesPHPLocal::MostrarMensaje(\$this->conexion, MSG_ERRGRAVE, "Error al insertar.", ["archivo" => __FILE__, "funcion" => __FUNCTION__, "linea" => __LINE__], ["formato" => \$this->formato]);
@@ -329,7 +332,7 @@ abstract class c{$clase}DB {
     protected function Modificar(array \$datos): bool {
         \$spnombre = "upd_{$tabla}_x{$pk}";
         \$sparam = [
-{$updateParams}
+{$updateParamsBlock}
         ];
         if (!\$this->conexion->ejecutarStoredProcedure(\$spnombre, \$sparam, \$resultado, \$numfilas, \$errno)) {
             FuncionesPHPLocal::MostrarMensaje(\$this->conexion, MSG_ERRGRAVE, "Error al modificar.", ["archivo" => __FILE__, "funcion" => __FUNCTION__, "linea" => __LINE__], ["formato" => \$this->formato]);
