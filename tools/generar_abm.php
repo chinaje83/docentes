@@ -178,7 +178,7 @@ if (isset($options['schema'])) {
     try {
         $schema = parseCreateTable($createSql);
     } catch (RuntimeException $exception) {
-        fwrite(STDERR, $exception->getMessage() . \"\\n\");
+        fwrite(STDERR, $exception->getMessage() . "\n");
         exit(1);
     }
     $schema['modulo'] = $options['modulo'] ?? strtolower($schema['tabla']);
