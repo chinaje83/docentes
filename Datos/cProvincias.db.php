@@ -1,0 +1,185 @@
+<?php 
+abstract class cProvinciasDB
+{
+	/** @var accesoBDLocal  */
+	protected $conexion;
+	/** @var mixed  */
+	protected $formato;
+	/** @var array  */
+	protected $error;
+	/**
+	 * Constructor de la clase cProvinciasDB.
+	 *
+	 * Recibe un objeto accesoBDLocal y el formato a de  los mensajes de salida
+	 * $formato = FMT_TEXTO escribe en pantalla una caja con el mensaje de error, el tipo de caja depende del nivel de error
+	 *            FMT_ARRAY escribe el mensaje de error en la propiedad $error de la clase la cual puede ser accedida desde el método getError()
+	 *            otros escribe en pantalla el mensaje en texto plano
+	 *
+	 * @param accesoBDLocal $conexion
+	 * @param mixed         $formato
+	 */
+	function __construct(accesoBDLocal $conexion,$formato){
+
+		$this->conexion = &$conexion;
+		$this->formato = &$formato;
+	}
+
+	/**
+	 * Destructor de la clase cProvinciasDB.
+	 */
+	function __destruct(){}
+
+	/**
+	 * Devuelve el mensaje de error almacenado
+	 *
+	 * @return array
+	 */
+	public abstract function getError(): array;
+	
+	
+	/**
+	 * Guarda un mensaje de error
+	 *
+	 * @param string|array  $error
+	 * @param string        $error_description
+	 */
+	protected function setError($error,$error_description=''): void {
+		$this->error = is_array($error) ? $error : ['error' => $error, 'error_description' => $error_description];
+	}
+	
+	protected function BuscarxCodigo(array $datos,  &$resultado, ?int &$numfilas): bool
+	{
+		$spnombre="sel_Provincias_xIdProvincia";
+		$sparam=array(
+			'pIdProvincia'=> $datos['IdProvincia']
+		);
+		if(!$this->conexion->ejecutarStoredProcedure($spnombre,$sparam,$resultado,$numfilas,$errno) )
+		{
+			FuncionesPHPLocal::MostrarMensaje($this->conexion,MSG_ERRGRAVE,"Error al buscar al buscar por codigo. ",array("archivo" => __FILE__,"funcion" => __FUNCTION__, "linea" => __LINE__),array("formato"=>$this->formato));
+			return false;
+		}
+		return true;
+	}
+
+
+	protected function BusquedaAvanzada(array $datos,  &$resultado, ?int &$numfilas): bool
+	{
+		$spnombre="sel_Provincias_busqueda_avanzada";
+		$sparam=array(
+			'pxIdEstructura'=> $datos['xIdEstructura'],
+			'pIdEstructura'=> $datos['IdEstructura'],
+			'pxNombre'=> $datos['xNombre'],
+			'pNombre'=> $datos['Nombre'],
+			'pxEstado'=> $datos['xEstado'],
+			'pEstado'=> $datos['Estado'],
+			'plimit'=> $datos['limit'],
+			'porderby'=> $datos['orderby']
+		);
+		if(!$this->conexion->ejecutarStoredProcedure($spnombre,$sparam,$resultado,$numfilas,$errno) )
+		{
+			FuncionesPHPLocal::MostrarMensaje($this->conexion,MSG_ERRGRAVE,"Error al realizar la búsqueda avanzada. ",array("archivo" => __FILE__,"funcion" => __FUNCTION__, "linea" => __LINE__),array("formato"=>$this->formato));
+			return false;
+		}
+		return true;
+	}
+
+
+    protected function EstructuraCamposSP(&$spnombre,&$sparam)
+    {
+        $spnombre="sel_Provincias_Estructuras_nombre";
+        $sparam=array(
+        );
+        return true;
+    }
+
+
+    protected function BuscarAuditoriaRapida(array $datos,  &$resultado, ?int &$numfilas): bool
+	{
+		$spnombre="sel_Provincias_AuditoriaRapida";
+		$sparam=array(
+			'pIdProvincia'=> $datos['IdProvincia']
+		);
+		if(!$this->conexion->ejecutarStoredProcedure($spnombre,$sparam,$resultado,$numfilas,$errno) )
+		{
+			FuncionesPHPLocal::MostrarMensaje($this->conexion,MSG_ERRGRAVE,"Error al buscar al buscar por codigo. ",array("archivo" => __FILE__,"funcion" => __FUNCTION__, "linea" => __LINE__),array("formato"=>$this->formato));
+			return false;
+		}
+		return true;
+	}
+
+
+	protected function Insertar(array $datos, ?int &$codigoInsertado): bool
+	{
+
+		$spnombre="ins_Provincias";
+		$sparam=array(
+			'pIdEstructura'=> $datos['IdEstructura'],
+			'pNombre'=> $datos['Nombre'],
+			'pAltaFecha'=> $datos['AltaFecha'],
+			'pAltaUsuario'=> $datos['AltaUsuario'],
+			'pUltimaModificacionFecha'=> $datos['UltimaModificacionFecha'],
+			'pUltimaModificacionUsuario'=> $datos['UltimaModificacionUsuario']
+		);
+		if(!$this->conexion->ejecutarStoredProcedure($spnombre,$sparam,$resultado,$numfilas,$errno))
+		{
+			FuncionesPHPLocal::MostrarMensaje($this->conexion,MSG_ERRGRAVE,"Error al insertar. ",array("archivo" => __FILE__,"funcion" => __FUNCTION__, "linea" => __LINE__),array("formato"=>$this->formato));
+			return false;
+		}
+		$codigoInsertado=$this->conexion->UltimoCodigoInsertado();
+		return true;
+	}
+
+
+	protected function Modificar(array $datos): bool
+	{
+		$spnombre="upd_Provincias_xIdProvincia";
+		$sparam=array(
+			'pIdEstructura'=> $datos['IdEstructura'],
+			'pNombre'=> $datos['Nombre'],
+			'pUltimaModificacionFecha'=> date("Y/m/d H:i:s"),
+			'pUltimaModificacionUsuario'=> $_SESSION['usuariocod'],
+			'pIdProvincia'=> $datos['IdProvincia']
+		);
+		if(!$this->conexion->ejecutarStoredProcedure($spnombre,$sparam,$resultado,$numfilas,$errno))
+		{
+			FuncionesPHPLocal::MostrarMensaje($this->conexion,MSG_ERRGRAVE,"Error al modificar. ",array("archivo" => __FILE__,"funcion" => __FUNCTION__, "linea" => __LINE__),array("formato"=>$this->formato));
+			return false;
+		}
+		return true;
+	}
+
+
+	protected function Eliminar(array $datos): bool
+	{
+		$spnombre="del_Provincias_xIdProvincia";
+		$sparam=array(
+			'pIdProvincia'=> $datos['IdProvincia']
+		);
+		if(!$this->conexion->ejecutarStoredProcedure($spnombre,$sparam,$resultado,$numfilas,$errno))
+		{
+			FuncionesPHPLocal::MostrarMensaje($this->conexion,MSG_ERRGRAVE,"Error al eliminar por codigo. ",array("archivo" => __FILE__,"funcion" => __FUNCTION__, "linea" => __LINE__),array("formato"=>$this->formato));
+			return false;
+		}
+		return true;
+	}
+
+
+	protected function ModificarEstado(array $datos): bool
+	{
+		$spnombre="upd_Provincias_Estado_xIdProvincia";
+		$sparam=array(
+			'pEstado'=> $datos['Estado'],
+			'pIdProvincia'=> $datos['IdProvincia']
+		);
+		if(!$this->conexion->ejecutarStoredProcedure($spnombre,$sparam,$resultado,$numfilas,$errno))
+		{
+			FuncionesPHPLocal::MostrarMensaje($this->conexion,MSG_ERRGRAVE,"Error al modificar el estado. ",array("archivo" => __FILE__,"funcion" => __FUNCTION__, "linea" => __LINE__),array("formato"=>$this->formato));
+			return false;
+		}
+		return true;
+	}
+
+
+
+
+}

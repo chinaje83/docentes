@@ -1,0 +1,462 @@
+<?php 
+include(DIR_CLASES_DB."cEscuelasPOF.db.php");
+class cEscuelasPOF extends cEscuelasPOFdb
+{
+	/**
+	 * Constructor de la clase cEscuelasPOF.
+	 *
+	 * Recibe un objeto accesoBDLocal y el formato a de  los mensajes de salida
+	 * $formato = FMT_TEXTO escribe en pantalla una caja con el mensaje de error, el tipo de caja depende del nivel de error
+	 *            FMT_ARRAY escribe el mensaje de error en la propiedad $error de la clase la cual puede ser accedida desde el método getError()
+	 *            otros escribe en pantalla el mensaje en texto plano
+	 *
+	 * @param accesoBDLocal $conexion
+	 * @param mixed         $formato
+	 */
+	function __construct(accesoBDLocal $conexion,$formato=FMT_TEXTO){
+		parent::__construct($conexion,$formato);
+	}
+	/**
+	 * Destructor de la clase cEscuelasPOF.
+	 */
+	function __destruct(){
+		parent::__destruct();
+	}
+	/**
+	 * Devuelve el mensaje de error almacenado
+	 *
+	 * @return array
+	 */
+	public function getError(): array {
+		return $this->error;
+	}
+	
+	public function BuscarxCodigo($datos, &$resultado,&$numfilas): bool
+	{
+		if (!parent::BuscarxCodigo($datos,$resultado,$numfilas))
+			return false;
+		return true;
+	}
+
+	public function BuscarPOFAEditable($datos, &$resultado, &$numfilas): bool
+    {
+        if (!parent::BuscarPOFAEditable($datos, $resultado, $numfilas))
+            return false;
+        return true;
+    }
+
+
+	public function BusquedaAvanzada($datos,&$resultado,&$numfilas): bool
+	{
+		$sparam=array(
+			'xIdEscuela'=> 0,
+			'IdEscuela'=> "",
+			'xEstado'=> 0,
+			'Estado'=> "-1",
+			'limit'=> '',
+			'orderby'=> "IdPof ASC"
+		);
+		if(isset($datos['IdEscuela']) && $datos['IdEscuela']!="")
+		{
+			$sparam['IdEscuela']= $datos['IdEscuela'];
+			$sparam['xIdEscuela']= 1;
+		}
+		if(isset($datos['Estado']) && $datos['Estado']!="")
+		{
+			$sparam['Estado']= $datos['Estado'];
+			$sparam['xEstado']= 1;
+		}
+
+		if(isset($datos['orderby']) && $datos['orderby']!="")
+			$sparam['orderby']= $datos['orderby'];
+		if(isset($datos['limit']) && $datos['limit']!="")
+			$sparam['limit']= $datos['limit'];
+		if (!parent::BusquedaAvanzada($sparam,$resultado,$numfilas))
+			return false;
+		return true;
+	}
+
+	public function BuscarAuditoriaRapida($datos,&$resultado,&$numfilas): bool
+	{
+		if (!parent::BuscarAuditoriaRapida($datos,$resultado,$numfilas))
+			return false;
+		return true;
+	}
+
+    public function BuscarExistente($datos,&$resultado,&$numfilas): bool
+    {
+        if (!parent::BuscarExistente($datos,$resultado,$numfilas))
+            return false;
+        return true;
+    }
+
+	public function Insertar($datos,&$codigoInsertado): bool
+	{
+		if (!$this->_ValidarInsertar($datos))
+			return false;
+		$this->_SetearNull($datos);
+		$this->ObtenerProximoOrden($datos,$proxorden);
+		$datos['IdPof'] = $proxorden;
+		$datos['AltaFecha']=date("Y-m-d H:i:s");
+		$datos['AltaUsuario']=$_SESSION['usuariocod'];
+		$datos['UltimaModificacionFecha']=date("Y-m-d H:i:s");
+		$datos['UltimaModificacionUsuario']=$_SESSION['usuariocod'];
+		$datos['Estado'] = ACTIVO;
+		if (!parent::Insertar($datos,$codigoInsertado))
+			return false;
+		$oAuditoriasEscuelasPOF = new cAuditoriasEscuelasPOF($this->conexion,$this->formato);
+		$datos['IdPof'] = $codigoInsertado;
+		$datos['Accion'] = INSERTAR;
+		if(!$oAuditoriasEscuelasPOF->InsertarLog($datos,$codigoInsertadolog))
+			return false;
+		return true;
+	}
+
+
+	public function Modificar($datos): bool
+	{
+		if (!$this->_ValidarModificar($datos,$datosRegistro))
+			return false;
+		$datos['UltimaModificacionFecha']= $datosRegistro['UltimaModificacionFecha'] = date("Y-m-d H:i:s");
+		$datos['UltimaModificacionUsuario']= $datosRegistro['UltimaModificacionUsuario'] =$_SESSION['usuariocod'];
+		$this->_SetearNull($datos);
+		if (!parent::Modificar($datos))
+			return false;
+		$oAuditoriasEscuelasPOF = new cAuditoriasEscuelasPOF($this->conexion,$this->formato);
+		$datosRegistro['Accion'] = MODIFICACION;
+		if(!$oAuditoriasEscuelasPOF->InsertarLog($datosRegistro,$codigoInsertadolog))
+			return false;
+		return true;
+	}
+    public function  DesbloquearCargaDesempeno($datos): bool
+    {
+
+        $datos['UltimaModificacionFecha']= $datosRegistro['UltimaModificacionFecha'] = date("Y-m-d H:i:s");
+        $datos['UltimaModificacionUsuario']= $datosRegistro['UltimaModificacionUsuario'] =$_SESSION['usuariocod'];
+
+
+        if (!parent::DesbloquearCargaDesempeno($datos))
+            return false;
+
+//        $oAuditoriasEscuelasPOF = new cAuditoriasEscuelasPOF($this->conexion,$this->formato);
+//        $datosRegistro['Accion'] = MODIFICACION;
+//        if(!$oAuditoriasEscuelasPOF->InsertarLog($datosRegistro,$codigoInsertadolog))
+//            return false;
+
+        return true;
+
+    }
+
+    public function modificarxIdEscuela($datos): bool {
+        return parent::modificarxIdEscuela($datos);
+    }
+
+    public function ModificarPOF($datos): bool
+    {
+        if (!$this->_ValidarModificarPOF($datos,$datosRegistro))
+            return false;
+        $datos['UltimaModificacionFecha']= $datosRegistro['UltimaModificacionFecha'] = date("Y-m-d H:i:s");
+        $datos['UltimaModificacionUsuario']= $datosRegistro['UltimaModificacionUsuario'] =$_SESSION['usuariocod'];
+        $this->_SetearNull($datos);
+        if (!parent::ModificarPOF($datos))
+            return false;
+        $oAuditoriasEscuelasPOF = new cAuditoriasEscuelasPOF($this->conexion,$this->formato);
+        $datosRegistro['Accion'] = MODIFICACION;
+        if (!$oAuditoriasEscuelasPOF->InsertarLog($datosRegistro,$codigoInsertadolog))
+            return false;
+        return true;
+    }
+
+
+
+    public function ModificarPOFA($datos): bool
+    {
+        if (!$this->_ValidarModificarPOFA($datos,$datosRegistro))
+            return false;
+        $datos['UltimaModificacionFecha']= $datosRegistro['UltimaModificacionFecha'] = date("Y-m-d H:i:s");
+        $datos['UltimaModificacionUsuario']= $datosRegistro['UltimaModificacionUsuario'] =$_SESSION['usuariocod'];
+        $this->_SetearNull($datos);
+        if (!parent::ModificarPOFA($datos))
+            return false;
+        $oAuditoriasEscuelasPOF = new cAuditoriasEscuelasPOF($this->conexion,$this->formato);
+        $datosRegistro['Accion'] = MODIFICACION;
+        if(!$oAuditoriasEscuelasPOF->InsertarLog($datosRegistro,$codigoInsertadolog))
+            return false;
+        return true;
+    }
+
+	public function Eliminar($datos): bool
+	{
+		if (!$this->_ValidarEliminar($datos,$datosRegistro))
+			return false;
+		$oAuditoriasEscuelasPOF = new cAuditoriasEscuelasPOF($this->conexion,$this->formato);
+		$datosLog =$datosRegistro;
+		$datosLog['Accion'] = ELIMINAR;
+		if(!$oAuditoriasEscuelasPOF->InsertarLog($datosLog,$codigoInsertadolog))
+			return false;
+		$datosmodif['IdPof'] = $datos['IdPof'];
+		$datosmodif['Estado'] = ELIMINADO;
+		if (!$this->ModificarEstado($datosmodif))
+			return false;
+
+		return true;
+	}
+
+
+	public function ModificarEstado($datos): bool
+	{
+		if (!parent::ModificarEstado($datos))
+			return false;
+		return true;
+	}
+
+
+	public function Activar(array $datos): bool
+	{
+		$datosmodif['IdPof'] = $datos['IdPof'];
+		$datosmodif['Estado'] = ACTIVO;
+		if (!$this->ModificarEstado($datosmodif))
+			return false;
+		if (!$this->_ValidarEliminar($datos,$datosRegistro))
+			return false;
+		$oAuditoriasEscuelasPOF = new cAuditoriasEscuelasPOF($this->conexion,$this->formato);
+		$datosRegistro['Accion'] = MODIFICACION;
+		if(!$oAuditoriasEscuelasPOF->InsertarLog($datosRegistro,$codigoInsertadolog))
+			return false;
+		return true;
+	}
+
+
+	public function DesActivar(array $datos): bool
+	{
+		$datosmodif['IdPof'] = $datos['IdPof'];
+		$datosmodif['Estado'] = NOACTIVO;
+		if (!$this->ModificarEstado($datosmodif))
+			return false;
+		if (!$this->_ValidarEliminar($datos,$datosRegistro))
+			return false;
+		$oAuditoriasEscuelasPOF = new cAuditoriasEscuelasPOF($this->conexion,$this->formato);
+		$datosRegistro['Accion'] = MODIFICACION;
+		if(!$oAuditoriasEscuelasPOF->InsertarLog($datosRegistro,$codigoInsertadolog))
+			return false;
+		return true;
+	}
+
+
+	public function ModificarOrdenCompleto($datos): bool
+	{
+		$datosmodif['IdPof'] = 1;
+		$arregloOrden = explode(",",$datos['orden']);
+		foreach ($arregloOrden as $IdPof){
+			$datosmodif['IdPof'] = $IdPof;
+			if (!parent::ModificarOrden($datosmodif))
+				return false;
+			$datosmodif['IdPof']++;
+		}
+		return true;
+	}
+
+
+	private function ObtenerProximoOrden(array $datos, ?int &$proxorden): bool
+	{
+		$proxorden = 0;
+		if (!parent::BuscarUltimoOrden($datos,$resultado,$numfilas))
+			return false;
+		if ($numfilas!=0){
+			$datos = $this->conexion->ObtenerSiguienteRegistro($resultado);
+			$proxorden = $datos['maximo'] + 1;
+		}
+		return true;
+	}
+
+    public function CerrarPOFA(array $datos): bool
+    {
+        if (!$this->_ValidarCerrar($datos, $datosRegistro))
+            return false;
+
+        $datos['UltimaModificacionFecha'] = date("Y-m-d H:i:s");
+        $datos['UltimaModificacionUsuario'] = $_SESSION['usuariocod'];
+        if (!parent::CerrarPOFA($datos))
+            return false;
+
+		$oAuditoriasEscuelasPOF = new cAuditoriasEscuelasPOF($this->conexion,$this->formato);
+		$datosRegistro['Accion'] = MODIFICACION;
+		if(!$oAuditoriasEscuelasPOF->InsertarLog($datosRegistro,$codigoInsertadolog))
+            return false;
+		return true;
+    }
+
+
+//-----------------------------------------------------------------------------------------
+//FUNCIONES PRIVADAS
+//-----------------------------------------------------------------------------------------
+
+    private function _ValidarCerrar($datos, &$datosRegistro)
+    {
+        if (!$this->BuscarxCodigo($datos,$resultado,$numfilas))
+            return false;
+
+        if ($numfilas!=1) {
+            $this->setError(400,"Error debe ingresar un código valido.");
+            return false;
+        }
+        $datosRegistro = $this->conexion->ObtenerSiguienteRegistro($resultado);
+
+        $oEscuelaPuestos = new cEscuelasPuestos($this->conexion);
+        if (!$oEscuelaPuestos->BuscarPuestosVacios($datos, $resultado, $numfilas))
+            return false;
+
+        if ($numfilas > 0) {
+            $this->setError(400,"Error, aún quedan puestos por completar.");
+            return false;
+        }
+
+        return true;
+    }
+
+    
+	private function _ValidarInsertar($datos)
+	{
+	    if (!$this->BuscarExistente($datos, $resultado, $numfilas))
+	        return false;
+
+        if ($numfilas > 0) {
+            $this->setError(400, 'Actualmente el ciclo lectivo ya se encuentra asociado');
+            return false;
+        }
+
+		if (!$this->_ValidarDatosVacios($datos))
+			return false;
+		return true;
+	}
+
+
+	private function _ValidarModificar($datos,&$datosRegistro)
+	{
+		if (!$this->BuscarxCodigo($datos,$resultado,$numfilas))
+			return false;
+
+		if ($numfilas!=1) {
+			$this->setError(400,"Error debe ingresar un código valido.");
+			return false;
+		}
+		$datosRegistro = $this->conexion->ObtenerSiguienteRegistro($resultado);
+		if (!$this->_ValidarDatosVacios($datos))
+			return false;
+		return true;
+	}
+
+
+    private function _ValidarModificarPOF($datos,&$datosRegistro)
+    {
+        if (!$this->BuscarxCodigo($datos,$resultado,$numfilas))
+            return false;
+
+        if ($numfilas!=1) {
+            $this->setError(400, utf8_encode('Error debe ingresar un código valido.'));
+            return false;
+        }
+        $datosRegistro = $this->conexion->ObtenerSiguienteRegistro($resultado);
+        if (!$this->_ValidarDatosVaciosPOF($datos))
+            return false;
+        return true;
+    }
+
+    private function _ValidarModificarPOFA($datos,&$datosRegistro)
+    {
+        if (!$this->BuscarxCodigo($datos,$resultado,$numfilas))
+            return false;
+
+        if ($numfilas!=1) {
+            $this->setError(400, utf8_encode('Error debe ingresar un código valido.'));
+            return false;
+        }
+        $datosRegistro = $this->conexion->ObtenerSiguienteRegistro($resultado);
+        if (!$this->_ValidarDatosVaciosPOFA($datos))
+            return false;
+        return true;
+    }
+
+	private function _ValidarEliminar($datos,&$datosRegistro)
+	{
+		if (!$this->BuscarxCodigo($datos,$resultado,$numfilas))
+			return false;
+
+		if ($numfilas!=1) {
+            $this->setError(400, 'Error debe ingresar un código valido');
+			return false;
+		}
+		$datosRegistro = $this->conexion->ObtenerSiguienteRegistro($resultado);
+		return true;
+	}
+
+
+	private function _SetearNull(&$datos): void
+	{
+		if (!isset($datos['IdEscuela']) || $datos['IdEscuela']=="")
+			$datos['IdEscuela']="NULL";
+
+		if (!isset($datos['PofEditable']) || $datos['PofEditable'] === "")
+			$datos['PofEditable'] = 1;
+
+		if (!isset($datos['PofaEditable']) || $datos['PofaEditable'] === "")
+			$datos['PofaEditable'] = 1;
+
+        if (!isset($datos['PofaAdminEditable']) || $datos['PofaAdminEditable'] === "")
+            $datos['PofaAdminEditable'] = 1;
+
+        if (!isset($datos['PofEcEditable']) || $datos['PofEcEditable'] === "")
+            $datos['PofEcEditable'] = 0;
+
+		if (!isset($datos['UltimaModificacionFecha']) || $datos['UltimaModificacionFecha']=="")
+			$datos['UltimaModificacionFecha']="NULL";
+		
+	}
+
+	private function _ValidarDatosVacios($datos)
+	{
+		if (!isset($datos['IdEscuela']) || $datos['IdEscuela']=="")
+		{
+			$this->setError(400, "Debe ingresar una escuela");
+			return false;
+		}
+
+		if (isset($datos['IdEscuela']) && $datos['IdEscuela']!="")
+		{
+			if (!FuncionesPHPLocal::ValidarContenido($this->conexion,$datos['IdEscuela'],"NumericoEntero"))
+			{
+				$this->setError(400, "Error debe ingresar un campo numérico para el campo Escuela.");
+				return false;
+			}
+			if (strlen($datos['IdEscuela'])>11)
+			{
+				$this->setError(400, "Error, el campo Escuela no puede ser mayor a 11 .");
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+    private function _ValidarDatosVaciosPOF($datos)
+    {
+        if (!isset($datos['PofEditable']) || $datos['PofEditable']==="")
+        {
+            $this->setError(400, "Debe ingresar PofEditable");
+            return false;
+        }
+        return true;
+    }
+
+    private function _ValidarDatosVaciosPOFA($datos)
+    {
+        if (!isset($datos['PofaEditable']) || $datos['PofaEditable']==="")
+        {
+            $this->setError(400, "Debe ingresar PofaEditable");
+            return false;
+        }
+        return true;
+    }
+
+}

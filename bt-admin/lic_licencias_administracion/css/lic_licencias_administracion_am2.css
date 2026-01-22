@@ -1,0 +1,362 @@
+/**
+ * Estilos para el módulo de Revisión de Licencias - SUNA
+ * Bootstrap 4 + Estilos personalizados
+ */
+
+/* Variables de colores del módulo */
+:root {
+    --suna-primary: #0056b3;
+    --suna-success: #28a745;
+    --suna-warning: #fd7e14;
+    --suna-danger: #dc3545;
+    --suna-info: #17a2b8;
+    --suna-purple: #6f42c1;
+    --suna-pink: #e83e8c;
+    --suna-indigo: #6610f2;
+}
+
+/* Reset y base */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+}
+
+/* Cards con headers coloreados */
+.card {
+    border: none;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: none;
+    font-size: 0.95rem;
+}
+
+.card-header[data-toggle="collapse"] {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.card-header[data-toggle="collapse"]:hover {
+    filter: brightness(1.1);
+}
+
+.card-header .fa-chevron-down {
+    transition: transform 0.3s;
+}
+
+.card-header.collapsed .fa-chevron-down,
+.collapsed .fa-chevron-down {
+    transform: rotate(-90deg);
+}
+
+/* Avatar circles */
+.avatar-circle {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Form controls mejorados */
+.form-control:focus,
+.custom-select:focus {
+    border-color: var(--suna-primary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 86, 179, 0.15);
+}
+
+.form-control[readonly] {
+    background-color: #f8f9fa;
+}
+
+/* Input groups */
+.input-group-text {
+    background-color: #f8f9fa;
+    border-color: #ced4da;
+    color: #6c757d;
+}
+
+/* Badges mejorados */
+.badge-pill {
+    font-weight: 500;
+}
+
+/* Navegación por pills */
+.nav-pills .nav-link {
+    border-radius: 0.25rem;
+    color: #495057;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+    transition: all 0.2s;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: #e9ecef;
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--suna-primary);
+    color: #fff;
+}
+
+.nav-pills .nav-link .badge {
+    font-size: 0.7rem;
+    vertical-align: middle;
+}
+
+/* Secciones colapsables */
+.collapse-section {
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Zona de upload drag & drop */
+.upload-zone {
+    border: 2px dashed #dee2e6;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-zone:hover {
+    border-color: var(--suna-pink);
+    background-color: rgba(232, 62, 140, 0.03);
+}
+
+.upload-zone.dragover {
+    border-color: var(--suna-pink);
+    background-color: rgba(232, 62, 140, 0.08);
+    transform: scale(1.01);
+}
+
+/* Items de certificados */
+.certificado-item .card {
+    transition: all 0.2s;
+}
+
+.certificado-item .card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.certificado-preview {
+    overflow: hidden;
+    border-radius: 0.25rem;
+}
+
+.certificado-preview:hover .certificado-overlay {
+    opacity: 1 !important;
+}
+
+/* Items de juntas */
+.junta-item {
+    transition: background-color 0.2s;
+}
+
+.junta-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Items de cargos */
+.cargo-item {
+    transition: background-color 0.2s;
+}
+
+.cargo-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Comentarios estilo chat */
+.comentario-item {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Timeline de movimientos */
+.timeline-movimientos {
+    position: relative;
+}
+
+.movimiento-item {
+    position: relative;
+}
+
+.movimiento-item:last-child .timeline-line {
+    display: none;
+}
+
+.timeline-dot {
+    position: relative;
+    z-index: 1;
+}
+
+/* Botones de acción */
+.btn-group-sm .btn {
+    font-size: 0.8rem;
+}
+
+/* Panel de acciones sticky */
+@media (min-width: 992px) {
+    .sticky-lg-top {
+        position: sticky;
+        top: 80px;
+        z-index: 99;
+    }
+}
+
+/* Chosen select personalizado */
+.chosen-container {
+    width: 100% !important;
+}
+
+.chosen-container-single .chosen-single {
+    height: calc(1.5em + 0.75rem + 2px);
+    line-height: calc(1.5em + 0.75rem);
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background: #fff;
+    box-shadow: none;
+}
+
+.chosen-container-active.chosen-with-drop .chosen-single {
+    border-color: var(--suna-primary);
+}
+
+/* Typeahead autocomplete */
+.tt-menu {
+    background: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.tt-suggestion {
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+}
+
+.tt-suggestion:hover,
+.tt-suggestion.tt-cursor {
+    background-color: #f8f9fa;
+}
+
+.ProfileCard {
+    display: flex;
+    align-items: center;
+}
+
+.ProfileCard-details {
+    flex: 1;
+}
+
+.ProfileCard-realName {
+    color: var(--suna-primary);
+}
+
+/* Estados de licencia con colores */
+.estado-pendiente { color: #fd7e14; }
+.estado-aprobada { color: #28a745; }
+.estado-denegada { color: #dc3545; }
+.estado-revision { color: #17a2b8; }
+
+.bg-estado-pendiente { background-color: #fd7e14 !important; }
+.bg-estado-aprobada { background-color: #28a745 !important; }
+.bg-estado-denegada { background-color: #dc3545 !important; }
+.bg-estado-revision { background-color: #17a2b8 !important; }
+
+/* Clase hide (para compatibilidad) */
+.hide {
+    display: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .nav-pills .nav-link {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.5rem;
+    }
+
+    .nav-pills .nav-link i {
+        display: none;
+    }
+
+    .card-header {
+        font-size: 0.85rem;
+    }
+
+    .btn-group-sm .btn {
+        padding: 0.2rem 0.4rem;
+    }
+}
+
+/* Animaciones de carga */
+.load-sistema {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--suna-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Print styles */
+@media print {
+    .sticky-lg-top {
+        position: relative !important;
+        top: 0 !important;
+    }
+
+    .btn, .upload-zone, .nav-pills {
+        display: none !important;
+    }
+
+    .collapse:not(.show) {
+        display: block !important;
+    }
+
+    .card {
+        break-inside: avoid;
+    }
+}
+
+/* Indicadores del carrusel */
+ol.carousel-indicators li {
+    background-color: black !important;
+    border-color: whitesmoke !important;
+    border-width: thin !important;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
